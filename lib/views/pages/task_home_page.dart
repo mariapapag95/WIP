@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrapbook/controllers/layout_controller.dart';
 import 'package:scrapbook/controllers/theme_controller.dart';
 import 'package:states_rebuilder/scr/state_management/extensions/reactive_model_x.dart';
 
@@ -62,31 +63,34 @@ class TaskHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('To-Do List')),
-      body: taskController.rebuild(
-        () => ListView.builder(
-          shrinkWrap: true,
-          itemCount: c.tasks.length,
-          itemBuilder: (_, index) {
-            final task = c.tasks[index];
-            return ListTile(
-              selectedTileColor: themeControllerState.theme.splashColor,
-              selected: c.selectedTasks.contains(task),
-              leading: _statusIcon(task.status),
-              title: Text(task.title),
-              onLongPress: () => _showTaskDetails(task: task, context),
-              onTap: () => c.selectTask(task),
-              dense: true,
-              visualDensity: const VisualDensity(vertical: -4),
-              horizontalTitleGap: 0,
-            );
-          },
+    return GestureDetector(
+      onDoubleTap: () => layoutControllerState.selectPage(null),
+      child: Scaffold(
+        appBar: AppBar(title: const Text('To-Do List')),
+        body: taskController.rebuild(
+          () => ListView.builder(
+            shrinkWrap: true,
+            itemCount: c.tasks.length,
+            itemBuilder: (_, index) {
+              final task = c.tasks[index];
+              return ListTile(
+                selectedTileColor: themeControllerState.theme.splashColor,
+                selected: c.selectedTasks.contains(task),
+                leading: _statusIcon(task.status),
+                title: Text(task.title),
+                onLongPress: () => _showTaskDetails(task: task, context),
+                onTap: () => c.selectTask(task),
+                dense: true,
+                visualDensity: const VisualDensity(vertical: -4),
+                horizontalTitleGap: 0,
+              );
+            },
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddTaskSheet(context),
-        child: const Icon(Icons.add),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _showAddTaskSheet(context),
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
